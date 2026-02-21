@@ -6,6 +6,7 @@ import { Translations } from '../types';
 import { ArrowDown, Play } from 'lucide-react';
 import Magnet from './Magnet';
 import axios from 'axios';
+import { STRAPI_URL } from '../constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,7 +36,6 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
   useEffect(() => {
     const fetchHeroData = async () => {
         try {
-            const STRAPI_URL = import.meta.env.VITE_STRAPI_URL ?? 'http://localhost:1337';
             const response = await axios.get(`${STRAPI_URL}/api/hero?populate=*`);
             if (response.data.data) {
                  // Strapi v5 does not use .attributes, but v4 does. Check for both.
@@ -130,8 +130,6 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
   const getVideoSrc = () => {
       // Debug logs
       console.log('HeroData:', heroData);
-      
-      const STRAPI_URL = import.meta.env.VITE_STRAPI_URL ?? 'http://localhost:1337';
       
       // Check for Strapi video
       // Strapi v4 uses .data, v5 might not.

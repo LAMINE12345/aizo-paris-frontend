@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Send, ArrowDownRight } from 'lucide-react';
 import axios from 'axios';
+import { STRAPI_URL } from '../constants';
 import { Translations } from '../types';
 import Magnet from './Magnet';
 
@@ -46,7 +47,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ t }) => {
     setError(null);
 
     try {
-      await axios.post('http://localhost:1337/api/contact-messages', {
+      await axios.post(`${STRAPI_URL}/api/contact-messages`, {
         data: formData
       });
       setIsSent(true);

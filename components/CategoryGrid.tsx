@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Translations } from '../types';
 import axios from 'axios';
+import { STRAPI_URL, getStrapiMedia } from '../constants';
 import Magnet from './Magnet';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -30,12 +31,12 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ t }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('http://localhost:1337/api/categories?populate=image');
+        const response = await axios.get(`${STRAPI_URL}/api/categories?populate=image`);
         // Filter and map to match our desired order/structure if needed
         // Assuming the backend returns data in a standard Strapi format
         const fetchedCategories = response.data.data.map((cat: any) => {
             // Prepend Strapi URL to image path
-            const imageUrl = cat.image ? `http://localhost:1337${cat.image.url}` : undefined;
+            const imageUrl = cat.image ? getStrapiMedia(cat.image.url) : undefined;
             
             return {
                 id: cat.id,

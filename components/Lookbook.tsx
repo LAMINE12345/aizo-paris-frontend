@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import Magnet from './Magnet';
+import { STRAPI_URL, getStrapiMedia } from '../constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,14 +33,14 @@ const Lookbook: React.FC<LookbookProps> = ({ t, previewMode = false }) => {
   useEffect(() => {
     const fetchLookbooks = async () => {
         try {
-            const response = await axios.get('http://localhost:1337/api/lookbooks?populate=*');
+            const response = await axios.get(`${STRAPI_URL}/api/lookbooks?populate=*`);
             const data = response.data.data.map((item: any) => ({
                 id: item.id,
                 title: item.title,
                 slug: item.slug,
                 description: item.description,
                 images: item.images ? (Array.isArray(item.images) ? item.images : [item.images]).map((img: any) => ({
-                    url: `http://localhost:1337${img.url}`
+                    url: getStrapiMedia(img.url)
                 })) : []
             }));
             setLookbooks(data);

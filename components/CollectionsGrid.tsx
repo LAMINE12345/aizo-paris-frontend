@@ -6,6 +6,7 @@ import { Translations } from '../types';
 import { ArrowUpRight } from 'lucide-react';
 import Magnet from './Magnet';
 import axios from 'axios';
+import { STRAPI_URL, getStrapiMedia } from '../constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,14 +32,14 @@ const CollectionsGrid: React.FC<CollectionsGridProps> = ({ t }) => {
   useEffect(() => {
     const fetchCollections = async () => {
       try {
-        const response = await axios.get('http://localhost:1337/api/collections?populate=image');
+        const response = await axios.get(`${STRAPI_URL}/api/collections?populate=image`);
         const data = response.data.data
           .filter((c: any) => c.name.toLowerCase() !== 'accessoires')
           .map((c: any) => ({
             id: c.id,
             name: c.name,
             slug: c.slug,
-            image: c.image ? { url: `http://localhost:1337${c.image.url}` } : undefined
+            image: c.image ? { url: getStrapiMedia(c.image.url) } : undefined
           }));
         setCollections(data);
       } catch (err) {

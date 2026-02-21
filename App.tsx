@@ -7,7 +7,7 @@ import Home from './components/Home'; // Keep Home eager for LCP
 import Preloader from './components/Preloader';
 import Toast from './components/Toast';
 import PageTransition from './components/PageTransition'; 
-import { products, translations } from './constants';
+import { products, translations, STRAPI_URL, getStrapiMedia } from './constants';
 import { Product, Language, CartItem } from './types';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -84,7 +84,6 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const STRAPI_URL = import.meta.env.VITE_STRAPI_URL ?? 'http://localhost:1337';
         const response = await axios.get(`${STRAPI_URL}/api/products?populate=*`);
         
         if (response.data && response.data.data) {
@@ -99,12 +98,12 @@ const App: React.FC = () => {
              if (imageField) {
                  const imageData = imageField.data !== undefined ? imageField.data : imageField;
                  if (imageData) {
-                     const imgItem = Array.isArray(imageData) ? imageData[0] : imageData;
-                     const imgAttrs = imgItem.attributes || imgItem;
-                     if (imgAttrs && imgAttrs.url) {
-                         imageUrl = imgAttrs.url.startsWith('http') 
-                             ? imgAttrs.url 
-                             : `${STRAPI_URL}${imgAttrs.url}`;
+                     // Check if it's an array (Strapi v4) or single object
+                     const imgObj = Array.isArray(imageData) ? imageData[0] : imageData;
+                     if (imgObj && imgObj.attributes && imgObj.attributes.url) {
+                        imageUrl = getStrapiMedia(imgObj.attributes.url) || imageUrl;
+                     } else if (imgObj && imgObj.url) {
+                         imageUrl = getStrapiMedia(imgObj.url) || imageUrl;
                      }
                  }
              }
