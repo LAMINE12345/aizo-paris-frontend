@@ -1,5 +1,19 @@
 import { Product, Translations, Language } from './types';
 
+// Use environment variable if available, otherwise fallback to the provided Strapi Cloud URL or localhost
+export const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || "https://splendid-diamond-af7d38eaa2.strapiapp.com";
+
+// Helper to get full media URL
+export const getStrapiMedia = (url: string) => {
+  if (url == null) {
+    return null;
+  }
+  if (url.startsWith("http") || url.startsWith("//")) {
+    return url;
+  }
+  return `${STRAPI_URL}${url}`;
+};
+
 export const products: Product[] = [
   {
     id: 1,
@@ -98,155 +112,22 @@ export const translations: Record<Language, Translations> = {
       heroTitle: "EST. 2024 PARIS",
       heroSubtitle: "AU-DELÀ DE LA MODE, UNE IDENTITÉ.",
       manifestoTitle: "LE MANIFESTE",
-      manifestoText: "Dans un monde saturé de bruit et de couleurs, AIZO PARIS a choisi le silence du noir et la pureté du blanc. Nous ne suivons pas les tendances ; nous construisons une architecture vestimentaire pour ceux qui façonnent la ville. Chaque pièce est une déclaration d'indépendance.",
-      values: {
-        title: "NOS PILIERS",
-        items: [
-          { title: "MINIMALISME RADICAL", desc: "Supprimer le superflu pour ne garder que l'essentiel. La complexité réside dans la simplicité." },
-          { title: "QUALITÉ SANS COMPROMIS", desc: "Des textiles lourds, durables, sélectionnés pour traverser les saisons et les époques." },
-          { title: "ESPRIT URBAIN", desc: "Inspiré par le béton, l'acier et le rythme de la métropole moderne." }
-        ]
-      },
-      studio: {
-        title: "LE STUDIO",
-        text: "Situé au cœur de Paris, notre studio de création est un laboratoire d'expérimentation où le design graphique rencontre le textile. Chaque collection commence par une étude des formes et des volumes."
-      }
+      manifestoText: "AIZO PARIS est né d'une volonté de redéfinir les codes du streetwear. Nous croyons en une mode qui transcende les tendances éphémères pour s'ancrer dans la durabilité et l'authenticité. Chaque pièce est conçue comme une œuvre architecturale, où la forme suit la fonction.",
+      valuesTitle: "NOS VALEURS",
+      valuesText: "Qualité sans compromis. Design intemporel. Production éthique. Nous collaborons avec les meilleurs artisans européens pour garantir une excellence à chaque étape de la fabrication.",
+      teamTitle: "L'ÉQUIPE",
+      teamText: "Un collectif de créatifs, designers et visionnaires unis par une même passion pour l'esthétique urbaine et l'innovation."
     },
     contactPage: {
       title: "CONTACT",
-      subtitle: "ENTRONS EN CONTACT",
-      info: {
-        addressLabel: "ADRESSE",
-        address: ["15 Rue du Faubourg Saint-Honoré", "75008 Paris, France"],
-        emailLabel: "EMAIL",
-        phoneLabel: "TÉLÉPHONE",
-        hoursLabel: "HORAIRES DU STUDIO",
-        hours: ["Lundi - Vendredi: 10h - 19h", "Samedi: 11h - 18h", "Dimanche: Fermé"]
-      },
-      form: {
-        name: "VOTRE NOM",
-        email: "VOTRE EMAIL",
-        subject: "SUJET",
-        message: "VOTRE MESSAGE",
-        submit: "ENVOYER LE MESSAGE",
-        success: "MERCI. NOUS VOUS RÉPONDRONS SOUS PEU."
-      }
-    },
-    lookbook: {
-      title: "CAMPAGNE",
-      subtitle: "AUTOMNE / HIVER 2024"
-    },
-    products: {
-      title: "DERNIERS DROPS",
-      addToCart: "AJOUTER",
-      added: "AJOUTÉ",
-      filters: {
-        all: "TOUT",
-        top: "HAUTS",
-        hoodie: "SWEATS",
-        bottom: "BAS",
-        outerwear: "VESTES",
-        accessory: "ACCESSOIRES"
-      },
-      sort: {
-        label: "TRIER",
-        newest: "NOUVEAUTÉS",
-        priceLow: "PRIX CROISSANT",
-        priceHigh: "PRIX DÉCROISSANT"
-      },
-      count: "ARTICLES"
-    },
-    productDetail: {
-      selectSize: "CHOISIR UNE TAILLE",
-      description: "Fabriqué à partir de coton premium à haut grammage. Coupe oversize emblématique de la marque. Finitions main à Paris.",
-      addToCart: "AJOUTER AU PANIER",
-      selectSizeError: "VEUILLEZ SÉLECTIONNER UNE TAILLE",
-      close: "FERMER",
-      sizeGuide: "GUIDE DES TAILLES",
-      related: "VOUS AIMEREZ AUSSI"
-    },
-    sizeGuide: {
-      title: "GUIDE DES TAILLES (CM)",
-      chest: "POITRINE",
-      length: "LONGUEUR",
-      sleeve: "MANCHES",
-      close: "FERMER"
-    },
-    wishlist: {
-      title: "FAVORIS",
-      empty: "AUCUN ARTICLE EN FAVORIS",
-      moveToCart: "AJOUTER AU PANIER",
-      remove: "RETIRER"
-    },
-    search: {
-      placeholder: "RECHERCHER UN PRODUIT...",
-      noResults: "AUCUN RÉSULTAT TROUVÉ.",
-      results: "RÉSULTATS",
-      close: "FERMER"
-    },
-    auth: {
-      title: "COMPTE",
-      login: "CONNEXION",
-      register: "INSCRIPTION",
-      email: "EMAIL",
-      password: "MOT DE PASSE",
-      submitLogin: "SE CONNECTER",
-      submitRegister: "CRÉER UN COMPTE",
-      switchToRegister: "PAS DE COMPTE ? S'INSCRIRE",
-      switchToLogin: "DÉJÀ UN COMPTE ? SE CONNECTER",
-      welcome: "BIENVENUE",
-      logout: "SE DÉCONNECTER"
-    },
-    faq: {
-      title: "QUESTIONS FRÉQUENTES",
-      items: [
-        {
-          question: "QUELS SONT LES DÉLAIS DE LIVRAISON ?",
-          answer: "Les commandes sont expédiées sous 24h. La livraison en France prend 2-3 jours ouvrés, et 3-7 jours pour l'international."
-        },
-        {
-          question: "PUIS-JE RETOURNER UN ARTICLE ?",
-          answer: "Oui, vous disposez de 14 jours après réception pour effectuer un retour. Les articles doivent être neufs et étiquetés."
-        },
-        {
-          question: "COMMENT TAILLENT VOS VÊTEMENTS ?",
-          answer: "Nos collections ont une coupe 'Oversize'. Prenez votre taille habituelle pour l'effet désiré, ou une taille en dessous pour un fit plus ajusté."
-        }
-      ]
-    },
-    contact: {
-      title: "CONTACT",
-      name: "NOM",
-      email: "EMAIL",
-      message: "MESSAGE",
-      submit: "ENVOYER",
-      success: "MESSAGE ENVOYÉ AVEC SUCCÈS"
-    },
-    newsletter: {
-      title: "JOIN THE CLUB",
-      subtitle: "BE THE FIRST TO KNOW ABOUT UPCOMING DROPS.",
-      placeholder: "YOUR EMAIL",
-      button: "SUBSCRIBE",
-      success: "WELCOME TO THE CLUB"
-    },
-    cookie: {
-      text: "WE USE COOKIES TO IMPROVE YOUR EXPERIENCE.",
-      accept: "ACCEPT",
-      decline: "DECLINE"
-    },
-    cart: {
-      title: "VOTRE PANIER",
-      empty: "Le panier est vide.",
-      total: "TOTAL",
-      checkout: "PAIEMENT",
-      close: "FERMER",
-      size: "TAILLE",
-      processing: "TRAITEMENT EN COURS...",
-      success: "COMMANDE VALIDÉE"
-    },
-    footer: {
-      rights: "TOUS DROITS RÉSERVÉS.",
-      contact: "CONTACT"
+      formTitle: "ENVOYER UN MESSAGE",
+      namePlaceholder: "VOTRE NOM",
+      emailPlaceholder: "VOTRE EMAIL",
+      subjectPlaceholder: "SUJET",
+      messagePlaceholder: "VOTRE MESSAGE",
+      submitButton: "ENVOYER",
+      successMessage: "MESSAGE ENVOYÉ AVEC SUCCÈS",
+      errorMessage: "UNE ERREUR EST SURVENUE"
     }
   },
   en: {
@@ -263,14 +144,14 @@ export const translations: Record<Language, Translations> = {
     hero: {
       title: "AIZO PARIS",
       subtitle: "URBAN ELEGANCE REDEFINED.",
-      cta: "DISCOVER COLLECTION"
+      cta: "DISCOVER THE COLLECTION"
     },
     marquee: {
       text: "NEW COLLECTION — WINTER 2024 — LIMITED EDITION — "
     },
     featured: {
       title: "NEW ARRIVALS",
-      subtitle: "THIS WEEK'S SELECTION",
+      subtitle: "WEEKLY SELECTION",
       cta: "VIEW ALL"
     },
     categories: {
@@ -285,9 +166,11 @@ export const translations: Record<Language, Translations> = {
     collections: {
       title: "COLLECTIONS",
       items: {
-        tops: "TOPS",
-        bottoms: "BOTTOMS",
-        accessories: "ACCESSORIES"
+        tshirts: "T-SHIRTS",
+        hoodies: "HOODIES",
+        shorts: "SHORTS",
+        vestes: "JACKETS",
+        accessoires: "ACCESSORIES"
       }
     },
     editorial: {
@@ -297,161 +180,28 @@ export const translations: Record<Language, Translations> = {
     about: {
       title: "THE AIZO SPIRIT",
       p1: "Born in the streets of Paris, AIZO represents the fusion between brutalist minimalism and timeless elegance.",
-      p2: "We don't create fashion, we design uniforms for the modern urban chaos."
+      p2: "We don't create fashion, we design uniforms for modern urban chaos."
     },
     aboutPage: {
       heroTitle: "EST. 2024 PARIS",
       heroSubtitle: "BEYOND FASHION, AN IDENTITY.",
       manifestoTitle: "THE MANIFESTO",
-      manifestoText: "In a world saturated with noise and color, AIZO PARIS chose the silence of black and the purity of white. We don't follow trends; we build sartorial architecture for those who shape the city. Each piece is a declaration of independence.",
-      values: {
-        title: "OUR PILLARS",
-        items: [
-          { title: "RADICAL MINIMALISM", desc: "Removing the superfluous to keep only the essential. Complexity lies in simplicity." },
-          { title: "UNCOMPROMISING QUALITY", desc: "Heavy, durable textiles selected to withstand seasons and eras." },
-          { title: "URBAN SPIRIT", desc: "Inspired by concrete, steel, and the rhythm of the modern metropolis." }
-        ]
-      },
-      studio: {
-        title: "THE STUDIO",
-        text: "Located in the heart of Paris, our creative studio is a laboratory of experimentation where graphic design meets textiles. Every collection starts with a study of shapes and volumes."
-      }
+      manifestoText: "AIZO PARIS was born from a desire to redefine streetwear codes. We believe in fashion that transcends ephemeral trends to anchor itself in sustainability and authenticity. Each piece is designed as an architectural work, where form follows function.",
+      valuesTitle: "OUR VALUES",
+      valuesText: "Uncompromised quality. Timeless design. Ethical production. We collaborate with the best European artisans to ensure excellence at every manufacturing stage.",
+      teamTitle: "THE TEAM",
+      teamText: "A collective of creatives, designers, and visionaries united by a shared passion for urban aesthetics and innovation."
     },
     contactPage: {
       title: "CONTACT",
-      subtitle: "GET IN TOUCH",
-      info: {
-        addressLabel: "ADDRESS",
-        address: ["15 Rue du Faubourg Saint-Honoré", "75008 Paris, France"],
-        emailLabel: "EMAIL",
-        phoneLabel: "PHONE",
-        hoursLabel: "STUDIO HOURS",
-        hours: ["Monday - Friday: 10am - 7pm", "Saturday: 11am - 6pm", "Sunday: Closed"]
-      },
-      form: {
-        name: "YOUR NAME",
-        email: "YOUR EMAIL",
-        subject: "SUBJECT",
-        message: "YOUR MESSAGE",
-        submit: "SEND MESSAGE",
-        success: "THANK YOU. WE WILL RESPOND SHORTLY."
-      }
-    },
-    lookbook: {
-      title: "CAMPAIGN",
-      subtitle: "FALL / WINTER 2024"
-    },
-    products: {
-      title: "LATEST DROPS",
-      addToCart: "ADD TO CART",
-      added: "ADDED",
-      filters: {
-        all: "ALL",
-        top: "TOPS",
-        hoodie: "HOODIES",
-        bottom: "BOTTOMS",
-        outerwear: "OUTERWEAR",
-        accessory: "ACCESSORIES"
-      },
-      sort: {
-        label: "SORT",
-        newest: "NEWEST",
-        priceLow: "PRICE: LOW TO HIGH",
-        priceHigh: "PRICE: HIGH TO LOW"
-      },
-      count: "ITEMS"
-    },
-    productDetail: {
-      selectSize: "SELECT SIZE",
-      description: "Crafted from premium heavyweight cotton. Signature oversized fit. Hand-finished in Paris.",
-      addToCart: "ADD TO CART",
-      selectSizeError: "PLEASE SELECT A SIZE",
-      close: "CLOSE",
-      sizeGuide: "SIZE GUIDE",
-      related: "YOU MIGHT ALSO LIKE"
-    },
-    sizeGuide: {
-      title: "SIZE GUIDE (CM)",
-      chest: "CHEST",
-      length: "LENGTH",
-      sleeve: "SLEEVE",
-      close: "CLOSE"
-    },
-    wishlist: {
-      title: "WISHLIST",
-      empty: "NO ITEMS IN WISHLIST",
-      moveToCart: "ADD TO CART",
-      remove: "REMOVE"
-    },
-    search: {
-      placeholder: "SEARCH FOR PRODUCTS...",
-      noResults: "NO RESULTS FOUND.",
-      results: "RESULTS",
-      close: "CLOSE"
-    },
-    auth: {
-      title: "ACCOUNT",
-      login: "LOGIN",
-      register: "REGISTER",
-      email: "EMAIL",
-      password: "MOT DE PASSE",
-      submitLogin: "SIGN IN",
-      submitRegister: "CREATE ACCOUNT",
-      switchToRegister: "NO ACCOUNT? REGISTER",
-      switchToLogin: "ALREADY HAVE AN ACCOUNT? LOGIN",
-      welcome: "WELCOME",
-      logout: "LOGOUT"
-    },
-    faq: {
-      title: "FREQUENTLY ASKED QUESTIONS",
-      items: [
-        {
-          question: "WHAT ARE THE SHIPPING TIMES?",
-          answer: "Orders are shipped within 24h. Delivery in France takes 2-3 business days, and 3-7 days internationally."
-        },
-        {
-          question: "CAN I RETURN AN ITEM?",
-          answer: "Yes, you have 14 days after receipt to make a return. Items must be new and tagged."
-        },
-        {
-          question: "HOW DO YOUR CLOTHES FIT?",
-          answer: "Our collections feature an 'Oversize' cut. Take your usual size for the desired effect, or a size down for a more fitted look."
-        }
-      ]
-    },
-    contact: {
-      title: "CONTACT",
-      name: "NAME",
-      email: "EMAIL",
-      message: "MESSAGE",
-      submit: "SEND",
-      success: "MESSAGE SENT SUCCESSFULLY"
-    },
-    newsletter: {
-      title: "JOIN THE CLUB",
-      subtitle: "BE THE FIRST TO KNOW ABOUT UPCOMING DROPS.",
-      placeholder: "YOUR EMAIL",
-      button: "SUBSCRIBE",
-      success: "WELCOME TO THE CLUB"
-    },
-    cookie: {
-      text: "WE USE COOKIES TO IMPROVE YOUR EXPERIENCE.",
-      accept: "ACCEPT",
-      decline: "DECLINE"
-    },
-    cart: {
-      title: "VOTRE PANIER",
-      empty: "Le panier est vide.",
-      total: "TOTAL",
-      checkout: "PAIEMENT",
-      close: "FERMER",
-      size: "TAILLE",
-      processing: "TRAITEMENT EN COURS...",
-      success: "COMMANDE VALIDÉE"
-    },
-    footer: {
-      rights: "TOUS DROITS RÉSERVÉS.",
-      contact: "CONTACT"
+      formTitle: "SEND A MESSAGE",
+      namePlaceholder: "YOUR NAME",
+      emailPlaceholder: "YOUR EMAIL",
+      subjectPlaceholder: "SUBJECT",
+      messagePlaceholder: "YOUR MESSAGE",
+      submitButton: "SEND",
+      successMessage: "MESSAGE SENT SUCCESSFULLY",
+      errorMessage: "AN ERROR OCCURRED"
     }
   }
 };
