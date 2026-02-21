@@ -16,7 +16,15 @@ const PageTransition: React.FC = () => {
     return firstPart.split('?')[0].toUpperCase();
   };
 
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
   useLayoutEffect(() => {
+    // Skip transition on initial load (let Preloader handle it)
+    if (isFirstLoad) {
+        setIsFirstLoad(false);
+        return;
+    }
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
       const currentName = getPageName(location.pathname);
@@ -54,7 +62,7 @@ const PageTransition: React.FC = () => {
   return (
     <div 
       ref={containerRef} 
-      className="fixed inset-0 z-[9999] flex flex-row pointer-events-none"
+      className="fixed inset-0 z-[9999] flex flex-row pointer-events-none hidden"
     >
       {/* 5 Vertical Columns */}
       {[...Array(5)].map((_, i) => (
