@@ -1,7 +1,7 @@
 import { Product, Translations, Language } from './types';
 
 // Use environment variable if available, otherwise fallback to the provided Strapi Cloud URL or localhost
-export const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || "https://splendid-diamond-af7d38eaa2.strapiapp.com";
+export const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || "https://ancient-fruit-82360a15fb.strapiapp.com";
 
 // Helper to get full media URL
 export const getStrapiMedia = (url: string) => {
