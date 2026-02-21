@@ -77,6 +77,10 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products, t, onProd
                             src={product.image} 
                             alt={product.name} 
                             className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
+                            onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = '/images/placeholder.jpg';
+                            }}
                         />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
                         
