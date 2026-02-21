@@ -113,21 +113,143 @@ export const translations: Record<Language, Translations> = {
       heroSubtitle: "AU-DELÀ DE LA MODE, UNE IDENTITÉ.",
       manifestoTitle: "LE MANIFESTE",
       manifestoText: "AIZO PARIS est né d'une volonté de redéfinir les codes du streetwear. Nous croyons en une mode qui transcende les tendances éphémères pour s'ancrer dans la durabilité et l'authenticité. Chaque pièce est conçue comme une œuvre architecturale, où la forme suit la fonction.",
-      valuesTitle: "NOS VALEURS",
-      valuesText: "Qualité sans compromis. Design intemporel. Production éthique. Nous collaborons avec les meilleurs artisans européens pour garantir une excellence à chaque étape de la fabrication.",
-      teamTitle: "L'ÉQUIPE",
-      teamText: "Un collectif de créatifs, designers et visionnaires unis par une même passion pour l'esthétique urbaine et l'innovation."
+      values: {
+        title: "NOS VALEURS",
+        items: [
+          { title: "QUALITÉ", desc: "Sans compromis. Nous utilisons les meilleurs matériaux." },
+          { title: "DESIGN", desc: "Intemporel et minimaliste." },
+          { title: "ÉTHIQUE", desc: "Production responsable et durable." }
+        ]
+      },
+      studio: {
+        title: "LE STUDIO",
+        text: "Un espace de création au cœur de Paris."
+      }
     },
     contactPage: {
       title: "CONTACT",
-      formTitle: "ENVOYER UN MESSAGE",
-      namePlaceholder: "VOTRE NOM",
-      emailPlaceholder: "VOTRE EMAIL",
-      subjectPlaceholder: "SUJET",
-      messagePlaceholder: "VOTRE MESSAGE",
-      submitButton: "ENVOYER",
-      successMessage: "MESSAGE ENVOYÉ AVEC SUCCÈS",
-      errorMessage: "UNE ERREUR EST SURVENUE"
+      subtitle: "NOUS CONTACTER",
+      info: {
+        addressLabel: "ADRESSE",
+        address: ["15 Rue du Faubourg St-Honoré", "75008 Paris"],
+        emailLabel: "EMAIL",
+        phoneLabel: "TÉLÉPHONE",
+        hoursLabel: "HORAIRES",
+        hours: ["Lundi - Vendredi: 10h - 19h"]
+      },
+      form: {
+        name: "VOTRE NOM",
+        email: "VOTRE EMAIL",
+        subject: "SUJET",
+        message: "VOTRE MESSAGE",
+        submit: "ENVOYER",
+        success: "MESSAGE ENVOYÉ AVEC SUCCÈS"
+      }
+    },
+    products: {
+      title: "PRODUITS",
+      addToCart: "AJOUTER AU PANIER",
+      added: "AJOUTÉ",
+      filters: {
+        all: "TOUT",
+        top: "HAUTS",
+        hoodie: "HOODIES",
+        bottom: "BAS",
+        outerwear: "VESTES"
+      },
+      sort: {
+        label: "TRIER PAR",
+        newest: "NOUVEAUTÉS",
+        priceLow: "PRIX CROISSANT",
+        priceHigh: "PRIX DÉCROISSANT"
+      },
+      count: "PRODUITS"
+    },
+    productDetail: {
+      selectSize: "SÉLECTIONNER UNE TAILLE",
+      description: "DESCRIPTION",
+      addToCart: "AJOUTER AU PANIER",
+      selectSizeError: "VEUILLEZ SÉLECTIONNER UNE TAILLE",
+      close: "FERMER",
+      sizeGuide: "GUIDE DES TAILLES",
+      related: "VOUS AIMEREZ AUSSI"
+    },
+    sizeGuide: {
+      title: "GUIDE DES TAILLES",
+      chest: "POITRINE",
+      length: "LONGUEUR",
+      sleeve: "MANCHE",
+      close: "FERMER"
+    },
+    wishlist: {
+      title: "LISTE D'ENVIES",
+      empty: "VOTRE LISTE D'ENVIES EST VIDE",
+      moveToCart: "AJOUTER AU PANIER",
+      remove: "RETIRER"
+    },
+    search: {
+      placeholder: "RECHERCHER...",
+      noResults: "AUCUN RÉSULTAT",
+      results: "RÉSULTATS",
+      close: "FERMER"
+    },
+    auth: {
+      title: "COMPTE",
+      login: "CONNEXION",
+      register: "INSCRIPTION",
+      email: "EMAIL",
+      password: "MOT DE PASSE",
+      submitLogin: "SE CONNECTER",
+      submitRegister: "S'INSCRIRE",
+      switchToRegister: "PAS ENCORE DE COMPTE ? S'INSCRIRE",
+      switchToLogin: "DÉJÀ UN COMPTE ? SE CONNECTER",
+      welcome: "BIENVENUE",
+      logout: "DÉCONNEXION"
+    },
+    faq: {
+      title: "FAQ",
+      items: [
+        { question: "LIVRAISON ?", answer: "Nous livrons dans le monde entier." },
+        { question: "RETOURS ?", answer: "Vous avez 30 jours pour retourner vos articles." }
+      ]
+    },
+    contact: {
+      title: "CONTACT",
+      name: "NOM",
+      email: "EMAIL",
+      message: "MESSAGE",
+      submit: "ENVOYER",
+      success: "MERCI POUR VOTRE MESSAGE"
+    },
+    newsletter: {
+      title: "NEWSLETTER",
+      subtitle: "INSCRIVEZ-VOUS POUR RECEVOIR NOS ACTUALITÉS",
+      placeholder: "VOTRE EMAIL",
+      button: "S'INSCRIRE",
+      success: "INSCRIPTION RÉUSSIE"
+    },
+    cookie: {
+      text: "NOUS UTILISONS DES COOKIES POUR AMÉLIORER VOTRE EXPÉRIENCE.",
+      accept: "ACCEPTER",
+      decline: "REFUSER"
+    },
+    cart: {
+      title: "PANIER",
+      empty: "VOTRE PANIER EST VIDE",
+      total: "TOTAL",
+      checkout: "COMMANDER",
+      close: "FERMER",
+      size: "TAILLE",
+      processing: "TRAITEMENT...",
+      success: "COMMANDE RÉUSSIE"
+    },
+    footer: {
+      rights: "TOUS DROITS RÉSERVÉS",
+      contact: "CONTACTEZ-NOUS"
+    },
+    lookbook: {
+      title: "LOOKBOOK",
+      subtitle: "COLLECTION 2024"
     }
   },
   en: {
@@ -187,21 +309,143 @@ export const translations: Record<Language, Translations> = {
       heroSubtitle: "BEYOND FASHION, AN IDENTITY.",
       manifestoTitle: "THE MANIFESTO",
       manifestoText: "AIZO PARIS was born from a desire to redefine streetwear codes. We believe in fashion that transcends ephemeral trends to anchor itself in sustainability and authenticity. Each piece is designed as an architectural work, where form follows function.",
-      valuesTitle: "OUR VALUES",
-      valuesText: "Uncompromised quality. Timeless design. Ethical production. We collaborate with the best European artisans to ensure excellence at every manufacturing stage.",
-      teamTitle: "THE TEAM",
-      teamText: "A collective of creatives, designers, and visionaries united by a shared passion for urban aesthetics and innovation."
+      values: {
+        title: "OUR VALUES",
+        items: [
+          { title: "QUALITY", desc: "Uncompromised. We use the best materials." },
+          { title: "DESIGN", desc: "Timeless and minimalist." },
+          { title: "ETHICS", desc: "Responsible and sustainable production." }
+        ]
+      },
+      studio: {
+        title: "THE STUDIO",
+        text: "A creative space in the heart of Paris."
+      }
     },
     contactPage: {
       title: "CONTACT",
-      formTitle: "SEND A MESSAGE",
-      namePlaceholder: "YOUR NAME",
-      emailPlaceholder: "YOUR EMAIL",
-      subjectPlaceholder: "SUBJECT",
-      messagePlaceholder: "YOUR MESSAGE",
-      submitButton: "SEND",
-      successMessage: "MESSAGE SENT SUCCESSFULLY",
-      errorMessage: "AN ERROR OCCURRED"
+      subtitle: "GET IN TOUCH",
+      info: {
+        addressLabel: "ADDRESS",
+        address: ["15 Rue du Faubourg St-Honoré", "75008 Paris"],
+        emailLabel: "EMAIL",
+        phoneLabel: "PHONE",
+        hoursLabel: "HOURS",
+        hours: ["Monday - Friday: 10am - 7pm"]
+      },
+      form: {
+        name: "YOUR NAME",
+        email: "YOUR EMAIL",
+        subject: "SUBJECT",
+        message: "YOUR MESSAGE",
+        submit: "SEND",
+        success: "MESSAGE SENT SUCCESSFULLY"
+      }
+    },
+    products: {
+      title: "PRODUCTS",
+      addToCart: "ADD TO CART",
+      added: "ADDED",
+      filters: {
+        all: "ALL",
+        top: "TOPS",
+        hoodie: "HOODIES",
+        bottom: "BOTTOMS",
+        outerwear: "OUTERWEAR"
+      },
+      sort: {
+        label: "SORT BY",
+        newest: "NEWEST",
+        priceLow: "PRICE LOW TO HIGH",
+        priceHigh: "PRICE HIGH TO LOW"
+      },
+      count: "PRODUCTS"
+    },
+    productDetail: {
+      selectSize: "SELECT A SIZE",
+      description: "DESCRIPTION",
+      addToCart: "ADD TO CART",
+      selectSizeError: "PLEASE SELECT A SIZE",
+      close: "CLOSE",
+      sizeGuide: "SIZE GUIDE",
+      related: "YOU MIGHT ALSO LIKE"
+    },
+    sizeGuide: {
+      title: "SIZE GUIDE",
+      chest: "CHEST",
+      length: "LENGTH",
+      sleeve: "SLEEVE",
+      close: "CLOSE"
+    },
+    wishlist: {
+      title: "WISHLIST",
+      empty: "YOUR WISHLIST IS EMPTY",
+      moveToCart: "ADD TO CART",
+      remove: "REMOVE"
+    },
+    search: {
+      placeholder: "SEARCH...",
+      noResults: "NO RESULTS",
+      results: "RESULTS",
+      close: "CLOSE"
+    },
+    auth: {
+      title: "ACCOUNT",
+      login: "LOGIN",
+      register: "REGISTER",
+      email: "EMAIL",
+      password: "PASSWORD",
+      submitLogin: "LOGIN",
+      submitRegister: "REGISTER",
+      switchToRegister: "NO ACCOUNT? REGISTER",
+      switchToLogin: "ALREADY HAVE AN ACCOUNT? LOGIN",
+      welcome: "WELCOME",
+      logout: "LOGOUT"
+    },
+    faq: {
+      title: "FAQ",
+      items: [
+        { question: "SHIPPING?", answer: "We ship worldwide." },
+        { question: "RETURNS?", answer: "You have 30 days to return your items." }
+      ]
+    },
+    contact: {
+      title: "CONTACT",
+      name: "NAME",
+      email: "EMAIL",
+      message: "MESSAGE",
+      submit: "SEND",
+      success: "THANKS FOR YOUR MESSAGE"
+    },
+    newsletter: {
+      title: "NEWSLETTER",
+      subtitle: "SUBSCRIBE TO OUR NEWSLETTER",
+      placeholder: "YOUR EMAIL",
+      button: "SUBSCRIBE",
+      success: "SUBSCRIPTION SUCCESSFUL"
+    },
+    cookie: {
+      text: "WE USE COOKIES TO IMPROVE YOUR EXPERIENCE.",
+      accept: "ACCEPT",
+      decline: "DECLINE"
+    },
+    cart: {
+      title: "CART",
+      empty: "YOUR CART IS EMPTY",
+      total: "TOTAL",
+      checkout: "CHECKOUT",
+      close: "CLOSE",
+      size: "SIZE",
+      processing: "PROCESSING...",
+      success: "ORDER SUCCESSFUL"
+    },
+    footer: {
+      rights: "ALL RIGHTS RESERVED",
+      contact: "CONTACT US"
+    },
+    lookbook: {
+      title: "LOOKBOOK",
+      subtitle: "COLLECTION 2024"
     }
   }
 };
