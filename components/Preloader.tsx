@@ -3,35 +3,72 @@ import gsap from 'gsap';
 
 interface PreloaderProps {
   onComplete: () => void;
+  loaded: boolean;
 }
 
-const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
+const Preloader: React.FC<PreloaderProps> = ({ onComplete, loaded }) => {
   const [progress, setProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const loadedRef = useRef(loaded);
+
+  // Keep ref in sync with prop for GSAP callbacks
+  useEffect(() => {
+    loadedRef.current = loaded;
+    if (loaded && tlRef.current) {
+        tlRef.current.play();
+    }
+  }, [loaded]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
+      tlRef.current = tl;
 
       // Animate progress number
       const progressObj = { value: 0 };
+      
+      // Phase 1: Go to 90%
       tl.to(progressObj, {
-        value: 100,
-        duration: 3,
+        value: 90,
+        duration: 2.5,
         ease: "power2.inOut",
         onUpdate: () => {
           setProgress(Math.round(progressObj.value));
         }
       });
-
-      // Animate line width
+      
+      // Also animate line to 90%
       tl.to(lineRef.current, {
-        scaleX: 1,
-        duration: 3,
+        scaleX: 0.9,
+        duration: 2.5,
         ease: "power2.inOut",
       }, 0);
+
+      // Checkpoint: Wait for loaded
+      tl.add(() => {
+        if (!loadedRef.current) {
+            tl.pause();
+        }
+      });
+
+      // Phase 2: Finish to 100%
+      tl.to(progressObj, {
+        value: 100,
+        duration: 0.5,
+        ease: "power2.out",
+        onUpdate: () => {
+          setProgress(Math.round(progressObj.value));
+        }
+      });
+      
+      tl.to(lineRef.current, {
+        scaleX: 1,
+        duration: 0.5,
+        ease: "power2.out",
+      }, "<");
 
       // 1. Hide the counter elements after reaching 100
       tl.to([counterRef.current, lineRef.current?.parentElement], {
@@ -41,7 +78,7 @@ const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
         ease: "power2.in",
       });
 
-    // 2. Final exit animation: Shutters
+      // 2. Final exit animation: Shutters
       tl.to('.shutter', {
         height: 0,
         duration: 1.2,
@@ -53,7 +90,7 @@ const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
     }, containerRef);
 
     return () => ctx.revert();
-  }, [onComplete]);
+  }, []); // Run once on mount
 
   return (
     <div 

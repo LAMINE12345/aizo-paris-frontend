@@ -19,12 +19,14 @@ interface HomeProps {
   t: Translations;
   onProductClick: (product: Product) => void;
   products?: Product[];
+  onMediaLoaded?: () => void;
+  startAnimation?: boolean;
 }
 
 const SectionLoader = () => <div className="w-full h-96 bg-zinc-50 animate-pulse" />;
 
-const Home: React.FC<HomeProps> = ({ t, onProductClick, products: propProducts }) => {
-  const displayProducts = propProducts && propProducts.length > 0 ? propProducts : products;
+const Home: React.FC<HomeProps> = ({ t, onProductClick, products: propProducts, onMediaLoaded, startAnimation }) => {
+  const displayProducts = propProducts || [];
   const location = useLocation();
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const Home: React.FC<HomeProps> = ({ t, onProductClick, products: propProducts }
 
   return (
     <div className="flex flex-col w-full">
-      <Hero t={t} />
+      <Hero t={t} onMediaLoaded={onMediaLoaded} startAnimation={startAnimation} />
       <Marquee t={t} />
       
       {/* Container with optimized vertical spacing */}

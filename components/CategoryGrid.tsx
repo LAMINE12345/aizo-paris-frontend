@@ -80,11 +80,7 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ t }) => {
   }, [loading, categories]);
 
   // Fallback static data if fetch fails or loading
-  const displayCategories = categories.length > 0 ? categories : [
-    { id: 1, slug: 'homme', name: t.categories.items.men, image: { url: '/images/star/05.jpg' } },
-    { id: 2, slug: 'femme', name: t.categories.items.women, image: { url: '/images/star/08.jpg' } },
-    { id: 3, slug: 'enfant', name: t.categories.items.kids, image: { url: '/images/star/01.JPG' } },
-  ];
+  const displayCategories = categories;
 
   return (
     <section ref={containerRef} className="bg-black text-white py-0 overflow-hidden">
@@ -99,9 +95,13 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ t }) => {
               {/* Image Layer */}
               <div className="absolute inset-0 opacity-60 group-hover:opacity-100 transition-opacity duration-700 ease-out">
                  <img 
-                    src={cat.image?.url || '/images/placeholder.jpg'} 
+                    src={cat.image?.url || '/images/star/05.jpg'} 
                     alt={cat.name} 
                     className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110" 
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/images/star/05.jpg';
+                    }}
                  />
               </div>
 

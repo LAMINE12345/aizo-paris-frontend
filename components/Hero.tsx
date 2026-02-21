@@ -6,12 +6,14 @@ import { Translations } from '../types';
 import { ArrowDown, Play } from 'lucide-react';
 import Magnet from './Magnet';
 import axios from 'axios';
-import { STRAPI_URL } from '../constants';
+import { STRAPI_URL, getStrapiMedia } from '../constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface HeroProps {
   t: Translations;
+  onMediaLoaded?: () => void;
+  startAnimation?: boolean;
 }
 
 interface HeroData {
@@ -25,13 +27,21 @@ interface HeroData {
     };
 }
 
-const Hero: React.FC<HeroProps> = ({ t }) => {
+const Hero: React.FC<HeroProps> = ({ t, onMediaLoaded, startAnimation = true }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const videoWrapperRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
   const navigate = useNavigate();
   const [heroData, setHeroData] = useState<HeroData | null>(null);
+  const [videoReady, setVideoReady] = useState(false);
+
+  // Notify parent when video is ready (or if fallback is used immediately)
+  useEffect(() => {
+    if (videoReady && onMediaLoaded) {
+        onMediaLoaded();
+    }
+  }, [videoReady, onMediaLoaded]);
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -41,15 +51,22 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
                  // Strapi v5 does not use .attributes, but v4 does. Check for both.
                  const data = response.data.data.attributes || response.data.data;
                  setHeroData(data);
+            } else {
+                 // No data, assume ready (using fallback)
+                 setVideoReady(true);
             }
         } catch (error) {
             console.error('Error fetching hero data:', error);
+            // Error, assume ready (using fallback)
+            setVideoReady(true);
         }
     };
     fetchHeroData();
   }, []);
 
   useEffect(() => {
+    if (!startAnimation) return;
+
     const mm = gsap.matchMedia();
     
     mm.add("(prefers-reduced-motion: no-preference)", (context) => {
@@ -116,7 +133,7 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
     }, containerRef);
 
     return () => mm.revert();
-  }, [t]); 
+  }, [t, startAnimation]); 
 
   // Split text for animation
   const splitText = (text: string) => {
@@ -132,24 +149,19 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
       console.log('HeroData:', heroData);
       
       // Check for Strapi video
-      // Strapi v4 uses .data, v5 might not.
       const videoField = heroData?.video;
       if (videoField) {
           // Determine the actual data object(s)
-          // If .data exists, use it. Otherwise assume videoField itself is the data (or array of data)
           const rawData = videoField.data !== undefined ? videoField.data : videoField;
           
           if (rawData) {
-               // Handle array vs single object
                const item = Array.isArray(rawData) ? rawData[0] : rawData;
-               
-               // Handle attributes wrapper vs flat
                const attributes = item?.attributes || item;
                
                if (attributes?.url) {
-                   const url = attributes.url;
+                   const url = getStrapiMedia(attributes.url);
                    console.log('Using Strapi video:', url);
-                   return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
+                   return url || "/images/hero.mp4";
                }
           }
       }
@@ -174,6 +186,8 @@ const Hero: React.FC<HeroProps> = ({ t }) => {
           loop
           playsInline
           crossOrigin="anonymous"
+          onLoadedData={() => setVideoReady(true)}
+          onError={() => setVideoReady(true)} // Fallback if error
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
         

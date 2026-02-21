@@ -76,10 +76,11 @@ const App: React.FC = () => {
   // UI Feedback States
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMediaLoaded, setIsMediaLoaded] = useState(false);
 
   // Translations convenience
   // t is already destructured from useLanguage()
-  const [productsData, setProductsData] = useState<Product[]>(products);
+  const [productsData, setProductsData] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -165,9 +166,9 @@ const App: React.FC = () => {
              };
           });
           
-          if (fetchedProducts.length > 0) {
+          // if (fetchedProducts.length > 0) {
               setProductsData(fetchedProducts);
-          }
+          // }
         }
       } catch (error) {
         console.error('Error fetching products from Strapi:', error);
@@ -302,7 +303,7 @@ const App: React.FC = () => {
 
   return (
     <HashRouter>
-      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+      {isLoading && <Preloader loaded={isMediaLoaded} onComplete={() => setIsLoading(false)} />}
       <ScrollToTop />
       <div className="relative min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white cursor-auto md:cursor-none flex flex-col">
         <div className="noise-overlay" />
@@ -346,9 +347,8 @@ const App: React.FC = () => {
         <main className="flex-grow">
           <Suspense fallback={<div className="h-screen w-full flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div></div>}>
             <Routes>
-              <Route path="/" element={<Home t={t} onProductClick={openProductModal} products={productsData} />} />
-              <Route path="/about" element={<AboutPage t={t} />} />
-              <Route path="/contact" element={<ContactPage t={t} />} />
+              <Route path="/" element={<Home t={t} onProductClick={openProductModal} products={productsData} onMediaLoaded={() => setIsMediaLoaded(true)} startAnimation={!isLoading} />} />
+              <Route path="/shop" element={<ProductList t={t} onProductClick={openProductModal} products={productsData} />} />
               <Route path="/collections" element={<Home t={t} onProductClick={openProductModal} products={productsData} />} />
               <Route path="/lookbook" element={<Lookbook t={t} />} />
               <Route 
