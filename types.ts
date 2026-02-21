@@ -78,9 +78,12 @@ export interface Translations {
   editorial: {
     text: string;
     author: string;
+    cursor: string;
   };
   about: {
     title: string;
+    subtitle: string;
+    quote: string;
     p1: string;
     p2: string;
   };

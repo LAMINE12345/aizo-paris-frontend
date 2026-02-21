@@ -78,14 +78,14 @@ const About: React.FC<AboutProps> = ({ t }) => {
         {/* Text Content */}
         <div ref={textContainerRef} className="order-2 md:order-1">
           <span className="about-para-reveal block text-xs font-mono text-zinc-400 uppercase tracking-[0.4em] mb-6">
-            L'ESSENCE DE LA MARQUE
+            {t.about.subtitle}
           </span>
           <h2 className="about-title-reveal text-5xl md:text-7xl font-bold mb-10 uppercase tracking-tighter leading-[0.9]">
             {t.about.title}
           </h2>
           <div className="space-y-8 text-xl md:text-2xl font-light leading-relaxed text-black">
             <p className="about-para-reveal border-l-4 border-black pl-8 italic">
-              "Le minimalisme n'est pas un manque de quelque chose. C'est simplement la quantité parfaite de tout."
+              "{t.about.quote}"
             </p>
             <p className="about-para-reveal">
               {t.about.p1}

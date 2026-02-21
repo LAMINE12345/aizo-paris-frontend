@@ -101,10 +101,13 @@ export const translations: Record<Language, Translations> = {
     },
     editorial: {
       text: "Le style n'est pas une question de vêtements, mais d'attitude. Dans le chaos du monde moderne, le minimalisme est notre armure.",
-      author: "DIRECTEUR ARTISTIQUE"
+      author: "DIRECTEUR ARTISTIQUE",
+      cursor: "MANIFESTE"
     },
     about: {
       title: "L'ESPRIT AIZO",
+      subtitle: "L'ESSENCE DE LA MARQUE",
+      quote: "Le minimalisme n'est pas un manque de quelque chose. C'est simplement la quantité parfaite de tout.",
       p1: "Né dans les rues de Paris, AIZO représente la fusion entre le minimalisme brutaliste et l'élégance intemporelle.",
       p2: "Nous ne créons pas de la mode, nous concevons des uniformes pour le chaos urbain moderne."
     },
@@ -297,12 +300,15 @@ export const translations: Record<Language, Translations> = {
     },
     editorial: {
       text: "Style is not about clothes, it's about attitude. In the chaos of the modern world, minimalism is our armor.",
-      author: "ARTISTIC DIRECTOR"
+      author: "ART DIRECTOR",
+      cursor: "MANIFESTO"
     },
     about: {
       title: "THE AIZO SPIRIT",
+      subtitle: "THE ESSENCE OF THE BRAND",
+      quote: "Minimalism is not a lack of something. It's simply the perfect amount of everything.",
       p1: "Born in the streets of Paris, AIZO represents the fusion between brutalist minimalism and timeless elegance.",
-      p2: "We don't create fashion, we design uniforms for modern urban chaos."
+      p2: "We don't create fashion, we design uniforms for the modern urban chaos."
     },
     aboutPage: {
       heroTitle: "EST. 2024 PARIS",

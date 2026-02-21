@@ -22,6 +22,12 @@ interface Category {
   };
 }
 
+const MOCK_CATEGORIES = [
+  { id: 1, name: 'HOMME', slug: 'homme', image: { url: '/images/star/05.jpg' } },
+  { id: 2, name: 'FEMME', slug: 'femme', image: { url: '/images/star/06.jpg' } },
+  { id: 3, name: 'ENFANT', slug: 'enfant', image: { url: '/images/star/07.jpg' } }
+];
+
 const CategoryGrid: React.FC<CategoryGridProps> = ({ t }) => {
   const containerRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
@@ -32,25 +38,22 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ t }) => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${STRAPI_URL}/api/categories?populate=image`);
-        // Filter and map to match our desired order/structure if needed
-        // Assuming the backend returns data in a standard Strapi format
-        const fetchedCategories = response.data.data.map((cat: any) => {
-            // Prepend Strapi URL to image path
-            const imageUrl = cat.image ? getStrapiMedia(cat.image.url) : undefined;
-            
-            return {
-                id: cat.id,
-                name: cat.name,
-                slug: cat.slug,
-                image: imageUrl ? { url: imageUrl } : undefined
-            };
-        });
-        
-        // Sort or filter if specific categories are needed (e.g., HOMME, FEMME, ENFANT)
-        // For now, we take the first 3 or specific ones
-        setCategories(fetchedCategories);
+        if (response.data && response.data.data && response.data.data.length > 0) {
+            const fetchedCategories = response.data.data.map((cat: any) => {
+                const imageUrl = cat.image ? getStrapiMedia(cat.image.url) : undefined;
+                return {
+                    id: cat.id,
+                    name: cat.name,
+                    slug: cat.slug,
+                    image: imageUrl ? { url: imageUrl } : undefined
+                };
+            });
+            setCategories(fetchedCategories);
+        } else {
+            setCategories(MOCK_CATEGORIES);
+        }
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        setCategories(MOCK_CATEGORIES);
       } finally {
         setLoading(false);
       }
@@ -58,26 +61,6 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ t }) => {
 
     fetchCategories();
   }, []);
-
-  useEffect(() => {
-    if (!loading && categories.length > 0) {
-      const ctx = gsap.context(() => {
-        gsap.from('.category-triptych', {
-          y: 100,
-          opacity: 0,
-          duration: 1.2,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 80%',
-            toggleActions: 'play reverse play reverse'
-          }
-        });
-      }, containerRef);
-      return () => ctx.revert();
-    }
-  }, [loading, categories]);
 
   // Fallback static data if fetch fails or loading
   const displayCategories = categories;
@@ -111,19 +94,19 @@ const CategoryGrid: React.FC<CategoryGridProps> = ({ t }) => {
               {/* Content */}
               <div className="absolute inset-0 flex flex-col justify-center items-center z-10 pointer-events-none">
                   <div className="overflow-hidden">
-                      <Magnet strength={0.1} active={true}>
+                      <Magnet strength={0.1}>
                         <span className="block text-xs font-mono tracking-[0.5em] mb-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 text-white pointer-events-auto">
                             COLLECTION 0{index + 1}
                         </span>
                       </Magnet>
                   </div>
-                  <Magnet strength={0.2} active={true}>
+                  <Magnet strength={0.2}>
                     <h2 className="text-6xl md:text-8xl font-bold uppercase tracking-tighter leading-none mix-blend-difference transform group-hover:-translate-y-4 transition-transform duration-500 pointer-events-auto">
                         {cat.name}
                     </h2>
                   </Magnet>
                    <div className="overflow-hidden h-6 mt-4">
-                      <Magnet strength={0.2} active={true}>
+                      <Magnet strength={0.2}>
                         <span className="block text-xs font-bold uppercase border-b border-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 delay-100 text-white pointer-events-auto">
                             {t.categories.cta}
                         </span>

@@ -286,8 +286,10 @@ const AuthSidebar: React.FC<AuthSidebarProps> = ({ isOpen, onClose, t }) => {
                              <form onSubmit={handleSubmit} className="space-y-6">
                                 {view === 'register' && (
                                     <div className="space-y-2 group">
-                                        <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400 group-focus-within:text-zinc-900 transition-colors">Username</label>
+                                        <label htmlFor="auth-username" className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400 group-focus-within:text-zinc-900 transition-colors">Username</label>
                                         <input 
+                                            id="auth-username"
+                                            name="username"
                                             required
                                             type="text" 
                                             value={username}
@@ -298,8 +300,10 @@ const AuthSidebar: React.FC<AuthSidebarProps> = ({ isOpen, onClose, t }) => {
                                     </div>
                                 )}
                                 <div className="space-y-2 group">
-                                    <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400 group-focus-within:text-zinc-900 transition-colors">Email Address</label>
+                                    <label htmlFor="auth-email" className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400 group-focus-within:text-zinc-900 transition-colors">Email Address</label>
                                     <input 
+                                        id="auth-email"
+                                        name="email"
                                         required
                                         type="email" 
                                         value={email}
@@ -310,12 +314,15 @@ const AuthSidebar: React.FC<AuthSidebarProps> = ({ isOpen, onClose, t }) => {
                                 </div>
                                 <div className="space-y-2 group">
                                     <div className="flex justify-between items-center">
-                                        <label className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400 group-focus-within:text-zinc-900 transition-colors">Password</label>
+                                        <label htmlFor="auth-password" className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400 group-focus-within:text-zinc-900 transition-colors">Password</label>
                                         {view === 'login' && (
                                             <button type="button" className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-400 hover:text-zinc-900 transition-colors">Forgot?</button>
                                         )}
                                     </div>
                                     <input 
+                                        id="auth-password"
+                                        name="password"
+                                        autoComplete={view === 'login' ? "current-password" : "new-password"}
                                         required
                                         type="password" 
                                         value={password}

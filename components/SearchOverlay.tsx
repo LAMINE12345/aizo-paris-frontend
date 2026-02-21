@@ -117,8 +117,11 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose, products
       {/* Search Input */}
       <div className="px-8 md:px-20 pt-10 pb-10 search-content">
         <div className="relative border-b border-zinc-200 focus-within:border-zinc-900 transition-colors duration-500">
+            <label htmlFor="search-input" className="sr-only">Search products</label>
             <Search className={`absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 transition-colors duration-300 ${query ? 'text-zinc-900' : 'text-zinc-400'}`} />
             <input 
+                id="search-input"
+                name="search"
                 ref={inputRef}
                 type="text" 
                 value={query}

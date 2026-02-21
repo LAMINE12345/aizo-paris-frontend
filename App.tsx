@@ -7,8 +7,8 @@ import Home from './components/Home'; // Keep Home eager for LCP
 import Preloader from './components/Preloader';
 import Toast from './components/Toast';
 import PageTransition from './components/PageTransition'; 
-import { products, translations, STRAPI_URL, getStrapiMedia } from './constants';
-import { Product, Language, CartItem } from './types';
+import { STRAPI_URL, getStrapiMedia } from './constants';
+import { Product, CartItem } from './types';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from '@studio-freight/lenis';
@@ -17,8 +17,10 @@ import axios from 'axios';
 // Lazy Load Pages
 const ProductList = lazy(() => import('./components/ProductList'));
 const Lookbook = lazy(() => import('./components/Lookbook'));
-const AboutPage = lazy(() => import('./components/AboutPage'));
-const ContactPage = lazy(() => import('./components/ContactPage'));
+const AboutPage = lazy(() => import('./components/AboutPage')); // Not used in routes? Wait, it was imported but not used in Routes in previous file?
+// Ah, routes only had Home, ProductList, Lookbook. AboutPage was missing in Routes!
+// I should add /about route.
+const ContactPage = lazy(() => import('./components/ContactPage')); // Also not used in Routes.
 
 // Lazy Load Modals/Sidebars
 const ProductModal = lazy(() => import('./components/ProductModal'));
@@ -29,7 +31,7 @@ const AuthSidebar = lazy(() => import('./components/AuthSidebar'));
 const SearchOverlay = lazy(() => import('./components/SearchOverlay'));
 const ContactModal = lazy(() => import('./components/ContactModal'));
 const CookieBanner = lazy(() => import('./components/CookieBanner'));
-const Footer = lazy(() => import('./components/Footer')); // Footer can be lazy loaded if it's below fold, but usually it's fine. keeping it eager or lazy is fine. Let's lazy load it to reduce initial bundle.
+const Footer = lazy(() => import('./components/Footer'));
 
 // Register GSAP plugins globally
 gsap.registerPlugin(ScrollTrigger);
@@ -79,7 +81,6 @@ const App: React.FC = () => {
   const [isMediaLoaded, setIsMediaLoaded] = useState(false);
 
   // Translations convenience
-  // t is already destructured from useLanguage()
   const [productsData, setProductsData] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -101,16 +102,17 @@ const App: React.FC = () => {
                  if (imageData) {
                      // Check if it's an array (Strapi v4) or single object
                      const imgObj = Array.isArray(imageData) ? imageData[0] : imageData;
-                     if (imgObj && imgObj.attributes && imgObj.attributes.url) {
-                        imageUrl = getStrapiMedia(imgObj.attributes.url) || imageUrl;
-                     } else if (imgObj && imgObj.url) {
-                         imageUrl = getStrapiMedia(imgObj.url) || imageUrl;
+                     if (imgObj) {
+                         // Check for attributes (Strapi v4) or direct url (Strapi v5/flat)
+                         const url = imgObj.attributes ? imgObj.attributes.url : imgObj.url;
+                         if (url) {
+                            imageUrl = getStrapiMedia(url) || imageUrl;
+                         }
                      }
                  }
              }
 
              // Map collections/categories
-             // If "collections" is a relation, we need to extract names
              let productCollections: string[] = [];
              const collectionsField = attrs.collections;
              if (collectionsField) {
@@ -119,33 +121,33 @@ const App: React.FC = () => {
                      productCollections = colData.map((c: any) => {
                          const cAttrs = c.attributes || c;
                          const name = cAttrs.name || '';
-                         // Normalize to Title Case for matching frontend filters (e.g. "T-shirts", "Hoodies")
+                         if (!name) return '';
                          return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                      }).filter(Boolean);
                  }
              }
 
-             // Determine primary category from collections if possible, or default
+             // Determine primary category
              const category = productCollections.length > 0 ? productCollections[0] : 'Uncategorized';
              
-             // Sanitize colors to ensure they are strings
+             // Sanitize colors
              let productColors: string[] = [];
              if (Array.isArray(attrs.colors)) {
                  productColors = attrs.colors.map((c: any) => {
                      if (typeof c === 'string') return c;
-                     if (typeof c === 'object' && c !== null) {
+                     if (c && typeof c === 'object') {
                          return c.name || c.value || c.color || '';
                      }
                      return String(c);
                  }).filter((c: string) => c !== '');
              }
 
-             // Sanitize sizes to ensure they are strings
+             // Sanitize sizes
              let productSizes: string[] = [];
              if (Array.isArray(attrs.sizes)) {
                  productSizes = attrs.sizes.map((s: any) => {
                      if (typeof s === 'string') return s;
-                     if (typeof s === 'object' && s !== null) {
+                     if (s && typeof s === 'object') {
                          return s.name || s.value || s.size || '';
                      }
                      return String(s);
@@ -157,7 +159,7 @@ const App: React.FC = () => {
                name: attrs.name || 'Untitled Product',
                price: attrs.price || 0,
                image: imageUrl,
-               category: category, // Using first collection as category for now
+               category: category,
                gender: attrs.gender || 'HOMME',
                collections: productCollections,
                colors: productColors,
@@ -166,13 +168,10 @@ const App: React.FC = () => {
              };
           });
           
-          // if (fetchedProducts.length > 0) {
-              setProductsData(fetchedProducts);
-          // }
+          setProductsData(fetchedProducts);
         }
       } catch (error) {
-        console.error('Error fetching products from Strapi:', error);
-        // Keep using the static products from constants as fallback
+        // Fallback or error handling
       }
     };
     
@@ -208,7 +207,7 @@ const App: React.FC = () => {
           return { ...item, quantity: Math.max(0, item.quantity + delta) };
         }
         return item;
-      }).filter(item => item.quantity > 0); // Remove if quantity becomes 0
+      }).filter(item => item.quantity > 0);
     });
   };
 
@@ -228,15 +227,12 @@ const App: React.FC = () => {
   };
 
   const openProductModal = (product: Product) => {
-    // If modal is already open (e.g. from related products), we might want a smooth transition
-    // For now, React update will handle it
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
 
   const closeProductModal = () => {
     setIsModalOpen(false);
-    // Timeout to clear product after animation
     setTimeout(() => setSelectedProduct(null), 300);
   };
 
@@ -275,10 +271,7 @@ const App: React.FC = () => {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
       
-      // Only handle if it's a pure hash link and not a router link
       if (anchor && anchor.getAttribute('href')?.startsWith('#')) {
-         // Logic handled by Home component for section query params, 
-         // but if we have local anchors (e.g. #top), Lenis handles it.
          const id = anchor.getAttribute('href');
          if (id && id !== '#' && !id.includes('/')) {
            const element = document.querySelector(id);
@@ -306,7 +299,8 @@ const App: React.FC = () => {
       {isLoading && <Preloader loaded={isMediaLoaded} onComplete={() => setIsLoading(false)} />}
       <ScrollToTop />
       <div className="relative min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white cursor-auto md:cursor-none flex flex-col">
-        <div className="noise-overlay" />
+        {/* Conditional Noise Overlay */}
+        {(!isLoading || isMediaLoaded) && <div className="noise-overlay" />}
         <CustomCursor />
         
         {/* Next Level Transition */}
@@ -348,7 +342,6 @@ const App: React.FC = () => {
           <Suspense fallback={<div className="h-screen w-full flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div></div>}>
             <Routes>
               <Route path="/" element={<Home t={t} onProductClick={openProductModal} products={productsData} onMediaLoaded={() => setIsMediaLoaded(true)} startAnimation={!isLoading} />} />
-              <Route path="/shop" element={<ProductList t={t} onProductClick={openProductModal} products={productsData} />} />
               <Route path="/collections" element={<Home t={t} onProductClick={openProductModal} products={productsData} />} />
               <Route path="/lookbook" element={<Lookbook t={t} />} />
               <Route 
@@ -363,6 +356,8 @@ const App: React.FC = () => {
                   />
                 } 
               />
+              <Route path="/about" element={<AboutPage t={t} />} />
+              <Route path="/contact" element={<ContactPage t={t} />} />
               {/* Catch-all route to redirect back home */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

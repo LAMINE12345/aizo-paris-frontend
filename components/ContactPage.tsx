@@ -124,7 +124,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ t }) => {
                             </div>
                         )}
                         <div className="anim-item group relative">
+                            <label htmlFor="contact-name" className="sr-only">{t.contactPage.form.name}</label>
                             <input 
+                                id="contact-name"
                                 type="text" 
                                 name="name"
                                 value={formData.name}
@@ -136,7 +138,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ t }) => {
                         </div>
 
                         <div className="anim-item group relative">
+                            <label htmlFor="contact-email" className="sr-only">{t.contactPage.form.email}</label>
                             <input 
+                                id="contact-email"
                                 type="email" 
                                 name="email"
                                 value={formData.email}
@@ -148,7 +152,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ t }) => {
                         </div>
 
                         <div className="anim-item group relative">
+                            <label htmlFor="contact-subject" className="sr-only">{t.contactPage.form.subject}</label>
                             <input 
+                                id="contact-subject"
                                 type="text" 
                                 name="subject"
                                 value={formData.subject}
@@ -160,7 +166,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ t }) => {
                         </div>
 
                         <div className="anim-item group relative">
+                            <label htmlFor="contact-message" className="sr-only">{t.contactPage.form.message}</label>
                             <textarea 
+                                id="contact-message"
                                 name="message"
                                 value={formData.message}
                                 onChange={handleChange}

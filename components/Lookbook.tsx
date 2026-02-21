@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import Magnet from './Magnet';
 import { STRAPI_URL, getStrapiMedia } from '../constants';
+import { useGsapSkew } from '../hooks/useGsapSkew';
+import { useGsapReveal } from '@/hooks/useGsapReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,6 +32,8 @@ const Lookbook: React.FC<LookbookProps> = ({ t, previewMode = false }) => {
   const [lookbooks, setLookbooks] = useState<LookbookItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // ... (fetch logic remains same) ...
+
   useEffect(() => {
     const fetchLookbooks = async () => {
         try {
@@ -46,7 +50,6 @@ const Lookbook: React.FC<LookbookProps> = ({ t, previewMode = false }) => {
             setLookbooks(data);
         } catch (error) {
             console.error('Error fetching lookbooks:', error);
-            // Fallback
         } finally {
             setLoading(false);
         }
@@ -56,66 +59,27 @@ const Lookbook: React.FC<LookbookProps> = ({ t, previewMode = false }) => {
 
   const allImages = lookbooks.length > 0 
     ? lookbooks.flatMap(lb => lb.images.map(img => ({ url: img.url, title: lb.title })))
-    : [
-        { url: "/images/star/01.JPG", title: "Look 01" },
-        { url: "/images/star/02.jpg", title: "Look 02" },
-        { url: "/images/star/03.jpg", title: "Look 03" },
-        { url: "/images/star/04.jpg", title: "Look 04" },
-        { url: "/images/star/05.jpg", title: "Look 05" },
-        { url: "/images/star/06.jpg", title: "Look 06" },
-        { url: "/images/star/07.jpg", title: "Look 07" },
-        { url: "/images/star/08.jpg", title: "Look 08" }
-    ];
+    : [];
 
   const displayImages = previewMode ? allImages.slice(0, 4) : allImages;
 
-  useEffect(() => {
-    // Only run animation if we have images to display
-    if (displayImages.length > 0) {
-        const ctx = gsap.context(() => {
-        // Skew effect on scroll
-        let proxy = { skew: 0 },
-            skewSetter = gsap.quickSetter(".lookbook-img", "skewY", "deg"),
-            clamp = gsap.utils.clamp(-20, 20);
+  // Use the custom hook for skew animation
+  useGsapSkew({
+    triggerRef: containerRef as React.RefObject<HTMLElement>,
+    targetSelector: ".lookbook-img",
+    active: displayImages.length > 0
+  });
 
-        ScrollTrigger.create({
-            trigger: containerRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            onUpdate: (self) => {
-            let skew = clamp(self.getVelocity() / -300);
-            if (Math.abs(skew) > Math.abs(proxy.skew)) {
-                proxy.skew = skew;
-                gsap.to(proxy, {
-                    skew: 0, 
-                    duration: 0.8, 
-                    ease: "power3", 
-                    overwrite: true, 
-                    onUpdate: () => skewSetter(proxy.skew)
-                });
-            }
-            }
-        });
-        
-        // Reveal animation
-        gsap.from(".lookbook-item", {
-            y: 100,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.1,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top 70%"
-            }
-        });
-
-        }, containerRef);
-
-        return () => ctx.revert();
-    }
-  }, [displayImages]); // Depend on displayImages instead of loading/lookbooks
-
+  useGsapReveal({
+    triggerRef: containerRef as React.RefObject<HTMLElement>,
+    selector: ".lookbook-item",
+    direction: "up",
+    distance: 100,
+    duration: 1,
+    stagger: 0.1,
+    start: "top 70%",
+    active: displayImages.length > 0
+  });
 
   return (
     <section id="lookbook" ref={containerRef} className="py-32 bg-zinc-50 overflow-hidden">
@@ -185,7 +149,7 @@ const Lookbook: React.FC<LookbookProps> = ({ t, previewMode = false }) => {
         
         {previewMode && (
              <div className="mt-16 flex justify-center">
-                 <Magnet strength={0.3} active={true}>
+                 <Magnet strength={0.3}>
                      <Link to="/lookbook" className="group relative overflow-hidden bg-black text-white px-10 py-5 rounded-full flex items-center gap-4 transition-all hover:scale-105 shadow-xl shadow-black/20">
                          <span className="text-xs font-bold uppercase tracking-[0.2em] relative z-10">View Full Lookbook</span>
                          <ArrowUpRight className="w-5 h-5 relative z-10 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />

@@ -9,20 +9,32 @@ interface MagnetProps {
 }
 
 const Magnet: React.FC<MagnetProps> = ({ children, strength = 0.5, className = "", active = true }) => {
-  const magnetRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!active) return;
-    const magnet = magnetRef.current;
-    if (!magnet) return;
+    const wrapper = wrapperRef.current;
+    const content = contentRef.current;
+    if (!wrapper || !content) return;
 
-    // Use QuickSetter for performance
-    const xTo = gsap.quickTo(magnet, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
-    const yTo = gsap.quickTo(magnet, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+    let rect: DOMRect | null = null;
+
+    // Use QuickSetter for performance on content
+    const xTo = gsap.quickTo(content, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+    const yTo = gsap.quickTo(content, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+
+    const updateRect = () => {
+      if (wrapper) rect = wrapper.getBoundingClientRect();
+    };
+
+    // Initialize rect immediately in case mouse is already over
+    updateRect();
 
     const handleMouseMove = (e: MouseEvent) => {
+      if (!rect) return;
       const { clientX, clientY } = e;
-      const { left, top, width, height } = magnet.getBoundingClientRect();
+      const { left, top, width, height } = rect;
       
       const x = clientX - (left + width / 2);
       const y = clientY - (top + height / 2);
@@ -36,18 +48,27 @@ const Magnet: React.FC<MagnetProps> = ({ children, strength = 0.5, className = "
       yTo(0);
     };
 
-    magnet.addEventListener("mousemove", handleMouseMove);
-    magnet.addEventListener("mouseleave", handleMouseLeave);
+    wrapper.addEventListener("mouseenter", updateRect);
+    wrapper.addEventListener("mousemove", handleMouseMove);
+    wrapper.addEventListener("mouseleave", handleMouseLeave);
+    // Update rect on scroll/resize to be safe, though mouseenter covers most cases
+    window.addEventListener("scroll", updateRect, { passive: true });
+    window.addEventListener("resize", updateRect);
 
     return () => {
-      magnet.removeEventListener("mousemove", handleMouseMove);
-      magnet.removeEventListener("mouseleave", handleMouseLeave);
+      wrapper.removeEventListener("mouseenter", updateRect);
+      wrapper.removeEventListener("mousemove", handleMouseMove);
+      wrapper.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("scroll", updateRect);
+      window.removeEventListener("resize", updateRect);
     };
-  }, [strength]);
+  }, [strength, active]);
 
   return (
-    <div ref={magnetRef} className={`inline-block ${className}`}>
-      {children}
+    <div ref={wrapperRef} className={`inline-block ${className}`}>
+      <div ref={contentRef}>
+        {children}
+      </div>
     </div>
   );
 };

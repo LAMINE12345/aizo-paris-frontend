@@ -27,13 +27,24 @@ interface HeroData {
     };
 }
 
+const MOCK_HERO_DATA: HeroData = {
+    smallText: "Parisian • Brutalism • 2024",
+    bigTitleLine1: "AIZO",
+    bigTitleLine2: "PARIS",
+    ctaText: "DÉCOUVRIR LA COLLECTION",
+    ctaLink: "/shop",
+    video: {
+        data: null // Will fallback to default video
+    }
+};
+
 const Hero: React.FC<HeroProps> = ({ t, onMediaLoaded, startAnimation = true }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const videoWrapperRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLVideoElement>(null);
   const navigate = useNavigate();
-  const [heroData, setHeroData] = useState<HeroData | null>(null);
+  const [heroData, setHeroData] = useState<HeroData>(MOCK_HERO_DATA);
   const [videoReady, setVideoReady] = useState(false);
 
   // Notify parent when video is ready (or if fallback is used immediately)
@@ -56,8 +67,8 @@ const Hero: React.FC<HeroProps> = ({ t, onMediaLoaded, startAnimation = true }) 
                  setVideoReady(true);
             }
         } catch (error) {
-            console.error('Error fetching hero data:', error);
             // Error, assume ready (using fallback)
+            console.warn("Hero fetch failed, using mock data");
             setVideoReady(true);
         }
     };
@@ -145,9 +156,6 @@ const Hero: React.FC<HeroProps> = ({ t, onMediaLoaded, startAnimation = true }) 
   };
 
   const getVideoSrc = () => {
-      // Debug logs
-      console.log('HeroData:', heroData);
-      
       // Check for Strapi video
       const videoField = heroData?.video;
       if (videoField) {
@@ -160,13 +168,11 @@ const Hero: React.FC<HeroProps> = ({ t, onMediaLoaded, startAnimation = true }) 
                
                if (attributes?.url) {
                    const url = getStrapiMedia(attributes.url);
-                   console.log('Using Strapi video:', url);
                    return url || "/images/hero.mp4";
                }
           }
       }
       
-      console.log('Using local fallback video');
       return "/images/hero.mp4";
   };
 
@@ -207,17 +213,17 @@ const Hero: React.FC<HeroProps> = ({ t, onMediaLoaded, startAnimation = true }) 
         <div ref={textRef} className="text-center mix-blend-difference flex flex-col items-center perspective-[1000px]">
           <div className="mb-4 overflow-hidden">
             <p className="text-xs md:text-sm font-mono tracking-[1em] uppercase text-white/80">
-              {splitText(heroData?.smallText || "Parisian • Brutalism • 2024")}
+              {splitText(heroData.smallText)}
             </p>
           </div>
           
           <h1 className="text-[13vw] md:text-[16vw] leading-[0.8] font-black tracking-tighter uppercase flex justify-center text-white mix-blend-difference">
-             {splitText(heroData?.bigTitleLine1 || "AIZO")}
+             {splitText(heroData.bigTitleLine1)}
           </h1>
           
           <div className="flex justify-center relative">
             <h1 className="text-[12vw] md:text-[14vw] leading-[0.85] font-bold tracking-tighter uppercase text-transparent stroke-text relative z-10">
-                {splitText(heroData?.bigTitleLine2 || "PARIS")}
+                {splitText(heroData.bigTitleLine2)}
             </h1>
             {/* Duplicate for glitch effect/depth if needed later */}
           </div>
@@ -233,12 +239,12 @@ const Hero: React.FC<HeroProps> = ({ t, onMediaLoaded, startAnimation = true }) 
             <div className="flex-1 flex justify-center">
                <Magnet strength={0.3} active={true}>
                  <button 
-                     onClick={() => navigate(heroData?.ctaLink || '/shop')}
+                     onClick={() => navigate(heroData.ctaLink)}
                      className="group relative px-10 py-5 overflow-hidden bg-white text-black rounded-full"
                  >
                      <div className="relative z-10 flex items-center gap-2">
                         <span className="text-xs font-bold uppercase tracking-[0.2em] group-hover:text-white transition-colors duration-300">
-                            {heroData?.ctaText || t.hero.cta}
+                            {heroData.ctaText}
                         </span>
                         <ArrowDown className="w-4 h-4 -rotate-90 group-hover:text-white transition-colors duration-300" />
                      </div>

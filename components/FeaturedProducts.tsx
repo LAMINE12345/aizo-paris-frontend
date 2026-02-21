@@ -91,7 +91,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products, t, onProd
 
                         {/* Hover Overlay Button */}
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 z-10">
-                            <Magnet strength={0.3} active={true}>
+                            <Magnet strength={0.3}>
                                 <button className="bg-white/90 backdrop-blur-md text-zinc-900 px-8 py-4 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-zinc-900 hover:text-white transition-all duration-300 transform translate-y-4 group-hover:translate-y-0 flex items-center gap-2 shadow-xl">
                                     View Product <ArrowUpRight className="w-4 h-4" />
                                 </button>
@@ -111,7 +111,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ products, t, onProd
 
             {/* "View More" Card */}
              <div className="w-[80vw] md:w-[20vw] h-[40vh] md:h-[60vh] flex-shrink-0 flex items-center justify-center">
-                <Magnet strength={0.05} active={true} className="w-full h-full">
+                <Magnet strength={0.05} className="w-full h-full">
                     <div 
                         className="w-full h-full bg-zinc-900 text-zinc-50 cursor-pointer hover:bg-zinc-800 transition-all duration-500 flex flex-col items-center justify-center group relative overflow-hidden"
                         onClick={() => navigate('/shop')}

@@ -7,6 +7,7 @@ import { ArrowUpRight } from 'lucide-react';
 import Magnet from './Magnet';
 import axios from 'axios';
 import { STRAPI_URL, getStrapiMedia } from '../constants';
+import { useGsapReveal } from '@/hooks/useGsapReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,6 +22,13 @@ interface Collection {
   image?: { url: string };
 }
 
+const MOCK_COLLECTIONS = [
+  { id: 1, name: 'T-SHIRTS', slug: 't-shirts', image: { url: '/images/star/05.jpg' } },
+  { id: 2, name: 'HOODIES', slug: 'hoodies', image: { url: '/images/star/06.jpg' } },
+  { id: 3, name: 'SHORTS', slug: 'shorts', image: { url: '/images/star/07.jpg' } },
+  { id: 4, name: 'VESTES', slug: 'vestes', image: { url: '/images/star/08.jpg' } }
+];
+
 const CollectionsGrid: React.FC<CollectionsGridProps> = ({ t }) => {
   const containerRef = useRef<HTMLElement>(null);
   const col1Ref = useRef<HTMLDivElement>(null);
@@ -33,17 +41,21 @@ const CollectionsGrid: React.FC<CollectionsGridProps> = ({ t }) => {
     const fetchCollections = async () => {
       try {
         const response = await axios.get(`${STRAPI_URL}/api/collections?populate=image`);
-        const data = response.data.data
-          .filter((c: any) => c.name.toLowerCase() !== 'accessoires')
-          .map((c: any) => ({
-            id: c.id,
-            name: c.name,
-            slug: c.slug,
-            image: c.image ? { url: getStrapiMedia(c.image.url) } : undefined
-          }));
-        setCollections(data);
+        if (response.data && response.data.data && response.data.data.length > 0) {
+            const data = response.data.data
+            .filter((c: any) => c.name.toLowerCase() !== 'accessoires')
+            .map((c: any) => ({
+                id: c.id,
+                name: c.name,
+                slug: c.slug,
+                image: c.image ? { url: getStrapiMedia(c.image.url) } : undefined
+            }));
+            setCollections(data);
+        } else {
+            setCollections(MOCK_COLLECTIONS);
+        }
       } catch (err) {
-        console.error('Error fetching collections:', err);
+        setCollections(MOCK_COLLECTIONS);
       } finally {
         setLoading(false);
       }
@@ -78,26 +90,22 @@ const CollectionsGrid: React.FC<CollectionsGridProps> = ({ t }) => {
         }
       });
 
-      // Reveal animation for each collection item
-      const items = containerRef.current?.querySelectorAll(".collection-reveal");
-      if (items && items.length > 0) {
-        gsap.from(items, {
-          y: 60,
-          opacity: 0,
-          duration: 1,
-          stagger: 0.15,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 85%",
-            once: true,
-          }
-        });
-      }
-
     }, containerRef);
     return () => ctx.revert();
-  }, []);
+  }, [collections]);
+
+  useGsapReveal({
+    triggerRef: containerRef,
+    selector: ".collection-reveal",
+    direction: "up",
+    distance: 60,
+    duration: 1,
+    stagger: 0.15,
+    ease: "power2.out",
+    active: collections.length > 0,
+    start: "top 85%",
+    once: true
+  });
 
   const CollectionItem = ({ title, subtitle, img, category, height }: { title: string, subtitle: string, img: string, category: string, height: string }) => (
     <div 
@@ -151,12 +159,12 @@ const CollectionsGrid: React.FC<CollectionsGridProps> = ({ t }) => {
   };
 
   // Static fallback if loading or fetch fails
-  const displayCollections = collections.length > 0 ? collections : [
-      { id: 1, name: 'T-SHIRTS', slug: 't-shirts', image: { url: '/images/star/05.jpg' } },
-      { id: 2, name: 'HOODIES', slug: 'hoodies', image: { url: '/images/star/06.jpg' } },
-      { id: 3, name: 'SHORTS', slug: 'shorts', image: { url: '/images/star/07.jpg' } },
-      { id: 4, name: 'VESTES', slug: 'vestes', image: { url: '/images/star/08.jpg' } }
-  ];
+  const displayCollections = collections; // collections.length > 0 ? collections : [
+  //    { id: 1, name: 'T-SHIRTS', slug: 't-shirts', image: { url: '/images/star/05.jpg' } },
+  //    { id: 2, name: 'HOODIES', slug: 'hoodies', image: { url: '/images/hoodies.jpg' } },
+  //    { id: 3, name: 'SHORTS', slug: 'shorts', image: { url: '/images/star/07.jpg' } },
+  //    { id: 4, name: 'VESTES', slug: 'vestes', image: { url: '/images/star/08.jpg' } }
+  //];
 
   // Split into columns
   const col1Items = displayCollections.filter((_, i) => i % 2 === 0);

@@ -143,7 +143,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     )}
                 </button>
             </Magnet>
-            <Magnet active={true}>
+            <Magnet>
                 <button onClick={openWishlist} className={`relative ${buttonClass} hidden md:block`} data-cursor-text="WISHLIST" aria-label="Wishlist">
                     <Heart className={iconClass} />
                     {wishlistCount > 0 && (
@@ -151,7 +151,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     )}
                 </button>
             </Magnet>
-            <Magnet active={true}>
+            <Magnet>
                 <button onClick={openCart} className={`relative ${buttonClass}`} data-cursor-text="CART" aria-label="Cart">
                     <ShoppingBag className={iconClass} />
                     {cartCount > 0 && (

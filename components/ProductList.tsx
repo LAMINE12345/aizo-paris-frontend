@@ -114,7 +114,10 @@ const ProductList: React.FC<ProductListProps> = ({ products, t, onProductClick, 
     return () => ctx.revert();
   }, [filteredProducts, visibleCount]);
 
-  const isLiked = (id: number) => wishlistItems.some(item => item.id === id);
+  const isLiked = (id: number) => {
+    if (!wishlistItems) return false;
+    return wishlistItems.some(item => item.id === id);
+  };
 
   const loadMore = () => {
     setVisibleCount(prev => prev + 4);
@@ -329,7 +332,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, t, onProductClick, 
                                         className="p-3 bg-zinc-50 text-zinc-900 hover:bg-zinc-900 hover:text-zinc-50 transition-colors rounded-full shadow-lg"
                                     >
                                         <Heart 
-                                            className={`w-4 h-4 transition-colors ${isLiked(product.id) ? 'fill-current stroke-current text-red-500' : 'stroke-current'}`} 
+                                            className={`w-4 h-4 transition-colors ${isLiked(product.id) ? 'fill-current stroke-red-500 text-red-500' : 'stroke-current'}`} 
                                         />
                                     </button>
                                 </Magnet>
